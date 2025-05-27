@@ -1,0 +1,359 @@
+<Application
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="CanSatMonitor.App"
+    RequestedThemeVariant="Default"
+>
+
+  <Application.Resources>
+    <!-- Light Theme Colors -->
+    <SolidColorBrush x:Key="AppBackground" Color="#F8FAFC"/>
+    <SolidColorBrush x:Key="CardBackground" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="CardBorder" Color="#E2E8F0"/>
+    <SolidColorBrush x:Key="TextPrimary" Color="#1A202C"/>
+    <SolidColorBrush x:Key="TextSecondary" Color="#4A5568"/>
+    <SolidColorBrush x:Key="AccentPrimary" Color="#667EEA"/>
+    <SolidColorBrush x:Key="AccentSecondary" Color="#764BA2"/>
+
+    <!-- Dark Theme Colors -->
+    <SolidColorBrush x:Key="DarkAppBackground" Color="#0F1419"/>
+    <SolidColorBrush x:Key="DarkCardBackground" Color="#1A202C"/>
+    <SolidColorBrush x:Key="DarkCardBorder" Color="#2D3748"/>
+    <SolidColorBrush x:Key="DarkTextPrimary" Color="#F7FAFC"/>
+    <SolidColorBrush x:Key="DarkTextSecondary" Color="#A0AEC0"/>
+
+    <!-- Status Colors -->
+    <SolidColorBrush x:Key="SuccessColor" Color="#48BB78"/>
+    <SolidColorBrush x:Key="ErrorColor" Color="#F56565"/>
+    <SolidColorBrush x:Key="WarningColor" Color="#ED8936"/>
+    <SolidColorBrush x:Key="InfoColor" Color="#4299E1"/>
+
+    <!-- Temperature Gradient -->
+    <LinearGradientBrush x:Key="TemperatureGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+      <GradientStop Offset="0" Color="#FF6B6B"/>
+      <GradientStop Offset="0.5" Color="#FF8E53"/>
+      <GradientStop Offset="1" Color="#FF6B35"/>
+    </LinearGradientBrush>
+
+    <!-- Humidity Gradient -->
+    <LinearGradientBrush x:Key="HumidityGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+      <GradientStop Offset="0" Color="#4ECDC4"/>
+      <GradientStop Offset="0.5" Color="#44A08D"/>
+      <GradientStop Offset="1" Color="#093637"/>
+    </LinearGradientBrush>
+
+    <!-- Header Gradient -->
+    <LinearGradientBrush x:Key="HeaderGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+      <GradientStop Offset="0" Color="#667EEA"/>
+      <GradientStop Offset="0.5" Color="#764BA2"/>
+      <GradientStop Offset="1" Color="#F093FB"/>
+    </LinearGradientBrush>
+
+    <!-- Dark Header Gradient -->
+    <LinearGradientBrush x:Key="DarkHeaderGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+      <GradientStop Offset="0" Color="#1A1D29"/>
+      <GradientStop Offset="0.5" Color="#2D3748"/>
+      <GradientStop Offset="1" Color="#4A5568"/>
+    </LinearGradientBrush>
+  </Application.Resources>
+
+  <Application.Styles>
+    <FluentTheme />
+
+    <!-- Modern Card Styles -->
+    <Style Selector="Border.modern-card">
+      <Setter Property="Background" Value="{DynamicResource CardBackground}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="CornerRadius" Value="16"/>
+      <Setter Property="BoxShadow" Value="0 4 12 0 #15000000"/>
+      <Setter Property="Padding" Value="24"/>
+      <Setter Property="Margin" Value="8"/>
+    </Style>
+
+    <Style Selector="Border.modern-card:pointerover">
+      <Setter Property="BoxShadow" Value="0 8 25 0 #20000000"/>
+    </Style>
+
+    <Style Selector="Border.modern-card.dark">
+      <Setter Property="Background" Value="{DynamicResource DarkCardBackground}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource DarkCardBorder}"/>
+      <Setter Property="BoxShadow" Value="0 4 12 0 #25000000"/>
+    </Style>
+
+    <!-- Modern Buttons -->
+    <Style Selector="Button.modern-button">
+      <Setter Property="Background" Value="{DynamicResource AccentPrimary}"/>
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="CornerRadius" Value="12"/>
+      <Setter Property="Padding" Value="16,12"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <Style Selector="Button.modern-button:pointerover">
+      <Setter Property="Background" Value="{DynamicResource AccentSecondary}"/>
+    </Style>
+
+    <!-- Gradient Buttons -->
+    <Style Selector="Button.gradient-button">
+      <Setter Property="Background">
+        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+          <GradientStop Offset="0" Color="#667EEA"/>
+          <GradientStop Offset="1" Color="#764BA2"/>
+        </LinearGradientBrush>
+      </Setter>
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="CornerRadius" Value="12"/>
+      <Setter Property="Padding" Value="16,12"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
+    <!-- Success Button -->
+    <Style Selector="Button.success-button">
+      <Setter Property="Background">
+        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+          <GradientStop Offset="0" Color="#48BB78"/>
+          <GradientStop Offset="1" Color="#38A169"/>
+        </LinearGradientBrush>
+      </Setter>
+    </Style>
+
+    <!-- Error Button -->
+    <Style Selector="Button.error-button">
+      <Setter Property="Background">
+        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+          <GradientStop Offset="0" Color="#F56565"/>
+          <GradientStop Offset="1" Color="#E53E3E"/>
+        </LinearGradientBrush>
+      </Setter>
+    </Style>
+
+    <!-- Modern Typography -->
+    <Style Selector="TextBlock.title-large">
+      <Setter Property="FontSize" Value="32"/>
+      <Setter Property="FontWeight" Value="Bold"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+      <Setter Property="Margin" Value="0,0,0,8"/>
+    </Style>
+
+    <Style Selector="TextBlock.title-medium">
+      <Setter Property="FontSize" Value="24"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+      <Setter Property="Margin" Value="0,0,0,16"/>
+    </Style>
+
+    <Style Selector="TextBlock.title-small">
+      <Setter Property="FontSize" Value="18"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+      <Setter Property="Margin" Value="0,0,0,12"/>
+    </Style>
+
+    <Style Selector="TextBlock.subtitle">
+      <Setter Property="FontSize" Value="14"/>
+      <Setter Property="FontWeight" Value="Medium"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextSecondary}"/>
+      <Setter Property="Margin" Value="0,0,0,8"/>
+    </Style>
+
+    <Style Selector="TextBlock.value-display">
+      <Setter Property="FontSize" Value="48"/>
+      <Setter Property="FontWeight" Value="Bold"/>
+      <Setter Property="Margin" Value="0,12"/>
+      <Setter Property="TextAlignment" Value="Center"/>
+    </Style>
+
+    <Style Selector="TextBlock.value-medium">
+      <Setter Property="FontSize" Value="28"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="Margin" Value="0,8"/>
+      <Setter Property="TextAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Dark Theme Typography -->
+    <Style Selector="TextBlock.title-large.dark">
+      <Setter Property="Foreground" Value="{DynamicResource DarkTextPrimary}"/>
+    </Style>
+
+    <Style Selector="TextBlock.title-medium.dark">
+      <Setter Property="Foreground" Value="{DynamicResource DarkTextPrimary}"/>
+    </Style>
+
+    <Style Selector="TextBlock.title-small.dark">
+      <Setter Property="Foreground" Value="{DynamicResource DarkTextPrimary}"/>
+    </Style>
+
+    <Style Selector="TextBlock.subtitle.dark">
+      <Setter Property="Foreground" Value="{DynamicResource DarkTextSecondary}"/>
+    </Style>
+
+    <!-- Modern Progress Bars -->
+    <Style Selector="ProgressBar.modern-progress">
+      <Setter Property="Height" Value="12"/>
+      <Setter Property="CornerRadius" Value="6"/>
+      <Setter Property="Background" Value="#E2E8F0"/>
+      <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+
+    <Style Selector="ProgressBar.temperature-progress">
+      <Setter Property="Foreground" Value="{DynamicResource TemperatureGradient}"/>
+    </Style>
+
+    <Style Selector="ProgressBar.humidity-progress">
+      <Setter Property="Foreground" Value="{DynamicResource HumidityGradient}"/>
+    </Style>
+
+    <!-- Modern Input Controls -->
+    <Style Selector="ComboBox.modern-combo">
+      <Setter Property="Background" Value="{DynamicResource CardBackground}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}"/>
+      <Setter Property="BorderThickness" Value="2"/>
+      <Setter Property="CornerRadius" Value="8"/>
+      <Setter Property="Padding" Value="12,8"/>
+      <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <Style Selector="ComboBox.modern-combo:focus">
+      <Setter Property="BorderBrush" Value="{DynamicResource AccentPrimary}"/>
+    </Style>
+
+    <Style Selector="ComboBox.modern-combo.dark">
+      <Setter Property="Background" Value="{DynamicResource DarkCardBackground}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource DarkCardBorder}"/>
+      <Setter Property="Foreground" Value="{DynamicResource DarkTextPrimary}"/>
+    </Style>
+
+    <!-- Modern Date Picker -->
+    <Style Selector="DatePicker.modern-date">
+      <Setter Property="Background" Value="{DynamicResource CardBackground}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}"/>
+      <Setter Property="BorderThickness" Value="2"/>
+      <Setter Property="CornerRadius" Value="8"/>
+      <Setter Property="Padding" Value="12,8"/>
+    </Style>
+
+    <Style Selector="DatePicker.modern-date:focus">
+      <Setter Property="BorderBrush" Value="{DynamicResource AccentPrimary}"/>
+    </Style>
+
+    <!-- Status Indicators -->
+    <Style Selector="Ellipse.status-indicator">
+      <Setter Property="Width" Value="16"/>
+      <Setter Property="Height" Value="16"/>
+    </Style>
+
+    <Style Selector="Ellipse.status-connected">
+      <Setter Property="Fill" Value="{DynamicResource SuccessColor}"/>
+    </Style>
+
+    <Style Selector="Ellipse.status-disconnected">
+      <Setter Property="Fill" Value="{DynamicResource ErrorColor}"/>
+    </Style>
+
+    <Style Selector="Ellipse.status-warning">
+      <Setter Property="Fill" Value="{DynamicResource WarningColor}"/>
+    </Style>
+
+    <!-- Time Filter Buttons -->
+    <Style Selector="Button.time-filter">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource AccentPrimary}"/>
+      <Setter Property="BorderThickness" Value="2"/>
+      <Setter Property="CornerRadius" Value="20"/>
+      <Setter Property="Padding" Value="16,8"/>
+      <Setter Property="Margin" Value="4"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="FontSize" Value="12"/>
+      <Setter Property="Foreground" Value="{DynamicResource AccentPrimary}"/>
+    </Style>
+
+    <Style Selector="Button.time-filter:pointerover">
+      <Setter Property="Background" Value="{DynamicResource AccentPrimary}"/>
+      <Setter Property="Foreground" Value="White"/>
+    </Style>
+
+    <Style Selector="Button.time-filter.selected">
+      <Setter Property="Background" Value="{DynamicResource AccentPrimary}"/>
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource AccentPrimary}"/>
+    </Style>
+
+    <!-- History Row Styles -->
+    <Style Selector="Border.history-row">
+      <Setter Property="Background" Value="{DynamicResource CardBackground}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}"/>
+      <Setter Property="BorderThickness" Value="0,0,0,1"/>
+      <Setter Property="Padding" Value="16,12"/>
+      <Setter Property="Margin" Value="0,1"/>
+    </Style>
+
+    <Style Selector="Border.history-row:pointerover">
+      <Setter Property="Background" Value="#F8FAFC"/>
+    </Style>
+
+    <Style Selector="Border.history-row.dark">
+      <Setter Property="Background" Value="{DynamicResource DarkCardBackground}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource DarkCardBorder}"/>
+    </Style>
+
+    <Style Selector="Border.history-row.dark:pointerover">
+      <Setter Property="Background" Value="#2D3748"/>
+    </Style>
+
+    <!-- Chart Container -->
+    <Style Selector="Border.chart-container">
+      <Setter Property="Background" Value="{DynamicResource CardBackground}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="CornerRadius" Value="12"/>
+      <Setter Property="Padding" Value="16"/>
+      <Setter Property="BoxShadow" Value="0 4 12 0 #15000000"/>
+    </Style>
+
+    <Style Selector="Border.chart-container.dark">
+      <Setter Property="Background" Value="{DynamicResource DarkCardBackground}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource DarkCardBorder}"/>
+      <Setter Property="BoxShadow" Value="0 4 12 0 #25000000"/>
+    </Style>
+
+    <!-- Header Container -->
+    <Style Selector="Border.header-container">
+      <Setter Property="Background" Value="{DynamicResource HeaderGradient}"/>
+      <Setter Property="CornerRadius" Value="0,0,24,24"/>
+      <Setter Property="BoxShadow" Value="0 8 32 -8 #30000000"/>
+    </Style>
+
+    <Style Selector="Border.header-container.dark">
+      <Setter Property="Background" Value="{DynamicResource DarkHeaderGradient}"/>
+    </Style>
+
+    <!-- Theme Toggle Button -->
+    <Style Selector="Button.theme-toggle">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="CornerRadius" Value="20"/>
+      <Setter Property="Width" Value="40"/>
+      <Setter Property="Height" Value="40"/>
+    </Style>
+
+    <Style Selector="Button.theme-toggle:pointerover">
+      <Setter Property="Background" Value="#20FFFFFF"/>
+    </Style>
+
+    <!-- Modern Layout -->
+    <Style Selector="Grid.modern-layout">
+      <Setter Property="Margin" Value="16"/>
+    </Style>
+
+    <!-- Modern ScrollViewer -->
+    <Style Selector="ScrollViewer.modern-scroll">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="AllowAutoHide" Value="True"/>
+    </Style>
+
+  </Application.Styles>
+</Application>

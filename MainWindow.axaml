@@ -1,0 +1,516 @@
+<Window
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignWidth="1400"
+    d:DesignHeight="900"
+    x:Class="CanSatMonitor.MainWindow"
+    Name="MainWindowRoot"
+    MinWidth="800"
+    MinHeight="600"
+    Title="CanSat Monitor Dashboard"
+>
+
+  <Window.Styles>
+    <!-- Theme Toggle Animation -->
+    <Style Selector="Button.theme-toggle">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="CornerRadius" Value="20"/>
+      <Setter Property="Width" Value="40"/>
+      <Setter Property="Height" Value="40"/>
+    </Style>
+
+    <Style Selector="Button.theme-toggle:pointerover">
+      <Setter Property="Background" Value="#20FFFFFF"/>
+    </Style>
+
+    <!-- Sensor Card Styles -->
+    <Style Selector="Border.sensor-card">
+      <Setter Property="Opacity" Value="1"/>
+    </Style>
+
+    <!-- Value Pulse Style -->
+    <Style Selector="TextBlock.value-pulse">
+      <!-- No animations for compatibility -->
+    </Style>
+
+    <!-- Chart Card Style -->
+    <Style Selector="Border.chart-card">
+      <Setter Property="Opacity" Value="1"/>
+    </Style>
+
+    <!-- History Card Style -->
+    <Style Selector="Border.history-card">
+      <Setter Property="Opacity" Value="1"/>
+    </Style>
+
+    <!-- Modern Time Button -->
+    <Style Selector="Button.time-filter">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource AccentPrimary}"/>
+      <Setter Property="BorderThickness" Value="2"/>
+      <Setter Property="CornerRadius" Value="20"/>
+      <Setter Property="Padding" Value="16,8"/>
+      <Setter Property="Margin" Value="4"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="FontSize" Value="12"/>
+      <Setter Property="Foreground" Value="{DynamicResource AccentPrimary}"/>
+    </Style>
+
+    <Style Selector="Button.time-filter:pointerover">
+      <Setter Property="Background" Value="{DynamicResource AccentPrimary}"/>
+      <Setter Property="Foreground" Value="White"/>
+    </Style>
+
+    <Style Selector="Button.time-filter.selected">
+      <Setter Property="Background" Value="{DynamicResource AccentPrimary}"/>
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource AccentPrimary}"/>
+    </Style>
+
+    <!-- Connection Status Styles -->
+    <Style Selector="StackPanel.connection-status">
+      <!-- No transitions for compatibility -->
+    </Style>
+
+    <!-- History Row Styles -->
+    <Style Selector="Border.history-row">
+      <Setter Property="Background" Value="{DynamicResource CardBackground}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}"/>
+      <Setter Property="BorderThickness" Value="0,0,0,1"/>
+      <Setter Property="Padding" Value="16,12"/>
+      <Setter Property="Margin" Value="0,1"/>
+      <Setter Property="Opacity" Value="1"/>
+    </Style>
+
+    <Style Selector="Border.history-row:pointerover">
+      <Setter Property="Background" Value="#F8FAFC"/>
+    </Style>
+
+    <Style Selector="Border.history-row.dark">
+      <Setter Property="Background" Value="{DynamicResource DarkCardBackground}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource DarkCardBorder}"/>
+    </Style>
+
+    <Style Selector="Border.history-row.dark:pointerover">
+      <Setter Property="Background" Value="#2D3748"/>
+    </Style>
+
+    <!-- Statistics Card Grid -->
+    <Style Selector="StackPanel.stat-item">
+      <Setter Property="Opacity" Value="1"/>
+    </Style>
+
+    <!-- Layout Column Control -->
+    <Style Selector="Grid.main-content">
+      <Setter Property="Margin" Value="16"/>
+    </Style>
+
+    <Style Selector="ScrollViewer.left-panel">
+      <Setter Property="Width" Value="340"/>
+    </Style>
+
+    <Style Selector="Border.center-panel">
+      <Setter Property="Margin" Value="0"/>
+    </Style>
+
+    <Style Selector="ScrollViewer.right-panel">
+      <Setter Property="Width" Value="300"/>
+    </Style>
+
+  </Window.Styles>
+
+  <!-- Main Layout Grid -->
+  <Grid Name="RootGrid" Background="{DynamicResource AppBackground}" Classes="modern-layout">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+
+    <!-- Modern Header with Gradient Background -->
+    <Border Grid.Row="0" Classes="header-container" Name="HeaderContainer">
+      <Grid Margin="24,16">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Header Content -->
+        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+          <TextBlock
+            Text="CanSat Dashboard"
+            Classes="title-large"
+            Foreground="White"
+            Name="HeaderTitle"/>
+          <TextBlock
+            Name="HeaderSubtitle"
+            Text="Monitoramento em Tempo Real"
+            Classes="subtitle"
+            Foreground="#E2E8F0"/>
+        </StackPanel>
+
+        <!-- Connection Status -->
+        <StackPanel Grid.Column="1"
+                   Orientation="Horizontal"
+                   VerticalAlignment="Center"
+                   Margin="0,0,16,0"
+                   Classes="connection-status">
+          <Ellipse Classes="status-indicator status-disconnected" Name="StatusIndicator"/>
+          <TextBlock Text="DESCONECTADO"
+                    FontSize="12"
+                    FontWeight="Bold"
+                    Foreground="White"
+                    Margin="12,0,0,0"
+                    Name="StatusText"/>
+        </StackPanel>
+
+        <!-- Theme Toggle Button -->
+        <Button Grid.Column="2"
+               Classes="theme-toggle"
+               Name="ThemeToggleButton"
+               ToolTip.Tip="Alternar tema">
+          <PathIcon Data="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z"
+                   Foreground="White"
+                   Width="20"
+                   Height="20"/>
+        </Button>
+      </Grid>
+    </Border>
+
+    <!-- Main Content Area -->
+    <Grid Grid.Row="1" Classes="responsive-grid main-content" Name="MainGrid">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="340"/>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="300"/>
+      </Grid.ColumnDefinitions>
+
+      <!-- Left Panel - Sensor Data & Controls -->
+      <ScrollViewer Grid.Column="0"
+                   HorizontalScrollBarVisibility="Disabled"
+                   VerticalScrollBarVisibility="Auto"
+                   Classes="modern-scroll left-panel"
+                   Margin="0,0,8,0"
+                   Name="LeftPanel">
+        <StackPanel Spacing="16">
+
+          <!-- Connection Control Card -->
+          <Border Classes="modern-card sensor-card" Name="ConnectionCard">
+            <StackPanel Spacing="16">
+              <TextBlock Classes="title-small" Text="🔌 Conexão Arduino"/>
+
+              <!-- Port Selection -->
+              <StackPanel Spacing="8">
+                <TextBlock Classes="subtitle" Text="Porta Serial"/>
+                <ComboBox Name="PortComboBox"
+                         Classes="modern-combo"
+                         HorizontalAlignment="Stretch"/>
+              </StackPanel>
+
+              <!-- Connection Buttons -->
+              <Grid ColumnDefinitions="*,8,*">
+                <Button Grid.Column="0"
+                       Name="ConnectButton"
+                       Content="Conectar"
+                       Classes="gradient-button success-button"
+                       HorizontalAlignment="Stretch"/>
+
+                <Button Grid.Column="2"
+                       Name="DisconnectButton"
+                       Content="Desconectar"
+                       Classes="gradient-button error-button"
+                       HorizontalAlignment="Stretch"/>
+              </Grid>
+
+              <!-- Connection Status -->
+              <TextBlock Name="ConnectionStatus"
+                        Text="Selecione uma porta para conectar"
+                        Classes="subtitle"
+                        TextWrapping="Wrap"/>
+            </StackPanel>
+          </Border>
+
+          <!-- Temperature Sensor Card -->
+          <Border Classes="modern-card sensor-card" Name="TemperatureCard">
+            <StackPanel Spacing="12">
+              <Grid ColumnDefinitions="Auto,*">
+                <TextBlock Grid.Column="0"
+                          Text="🌡️"
+                          FontSize="24"
+                          VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="1"
+                          Classes="title-small"
+                          Text="TEMPERATURA"
+                          Margin="12,0,0,0"/>
+              </Grid>
+
+              <TextBlock Classes="value-display value-pulse"
+                        Name="TemperatureValue"
+                        Text="--°C">
+                <TextBlock.Foreground>
+                  <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                    <GradientStop Offset="0" Color="#FF6B6B"/>
+                    <GradientStop Offset="1" Color="#FF8E53"/>
+                  </LinearGradientBrush>
+                </TextBlock.Foreground>
+              </TextBlock>
+
+              <ProgressBar Classes="modern-progress temperature-progress"
+                          Name="TemperatureProgress"
+                          Value="0"
+                          Maximum="100"/>
+
+              <TextBlock Classes="subtitle"
+                        Text="Faixa normal: 20-30°C"
+                        TextAlignment="Center"/>
+            </StackPanel>
+          </Border>
+
+          <!-- Humidity Sensor Card -->
+          <Border Classes="modern-card sensor-card" Name="HumidityCard">
+            <StackPanel Spacing="12">
+              <Grid ColumnDefinitions="Auto,*">
+                <TextBlock Grid.Column="0"
+                          Text="💧"
+                          FontSize="24"
+                          VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="1"
+                          Classes="title-small"
+                          Text="UMIDADE"
+                          Margin="12,0,0,0"/>
+              </Grid>
+
+              <TextBlock Classes="value-display value-pulse"
+                        Name="HumidityValue"
+                        Text="--%">
+                <TextBlock.Foreground>
+                  <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                    <GradientStop Offset="0" Color="#4ECDC4"/>
+                    <GradientStop Offset="1" Color="#44A08D"/>
+                  </LinearGradientBrush>
+                </TextBlock.Foreground>
+              </TextBlock>
+
+              <ProgressBar Classes="modern-progress humidity-progress"
+                          Name="HumidityProgress"
+                          Value="0"
+                          Maximum="100"/>
+
+              <TextBlock Classes="subtitle"
+                        Text="Faixa ideal: 40-60%"
+                        TextAlignment="Center"/>
+            </StackPanel>
+          </Border>
+
+          <!-- Statistics Card -->
+          <Border Classes="modern-card sensor-card" Name="StatsCard">
+            <StackPanel Spacing="16">
+              <TextBlock Classes="title-small" Text="📊 Estatísticas"/>
+
+              <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto">
+                <!-- Temperature Max -->
+                <StackPanel Grid.Column="0"
+                           Classes="stat-item"
+                           HorizontalAlignment="Center"
+                           Spacing="4">
+                  <TextBlock Classes="subtitle" Text="TEMP MAX" TextAlignment="Center"/>
+                  <TextBlock Classes="value-medium"
+                            Name="TempMaxValue"
+                            Text="--°"
+                            TextAlignment="Center">
+                    <TextBlock.Foreground>
+                      <SolidColorBrush Color="#FF6B6B"/>
+                    </TextBlock.Foreground>
+                  </TextBlock>
+                  <TextBlock Classes="subtitle"
+                            Name="TempMaxTime"
+                            Text="--:--"
+                            TextAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Temperature Min -->
+                <StackPanel Grid.Column="1"
+                           Classes="stat-item"
+                           HorizontalAlignment="Center"
+                           Spacing="4">
+                  <TextBlock Classes="subtitle" Text="TEMP MIN" TextAlignment="Center"/>
+                  <TextBlock Classes="value-medium"
+                            Name="TempMinValue"
+                            Text="--°"
+                            TextAlignment="Center">
+                    <TextBlock.Foreground>
+                      <SolidColorBrush Color="#4ECDC4"/>
+                    </TextBlock.Foreground>
+                  </TextBlock>
+                  <TextBlock Classes="subtitle"
+                            Name="TempMinTime"
+                            Text="--:--"
+                            TextAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Humidity Average -->
+                <StackPanel Grid.Column="2"
+                           Classes="stat-item"
+                           HorizontalAlignment="Center"
+                           Spacing="4">
+                  <TextBlock Classes="subtitle" Text="UMID MÉDIA" TextAlignment="Center"/>
+                  <TextBlock Classes="value-medium"
+                            Name="HumidityAvgValue"
+                            Text="--%"
+                            TextAlignment="Center">
+                    <TextBlock.Foreground>
+                      <SolidColorBrush Color="#48BB78"/>
+                    </TextBlock.Foreground>
+                  </TextBlock>
+                  <TextBlock Classes="subtitle"
+                            Name="HumidityAvgPeriod"
+                            Text="Período ativo"
+                            TextAlignment="Center"/>
+                </StackPanel>
+              </Grid>
+            </StackPanel>
+          </Border>
+
+        </StackPanel>
+      </ScrollViewer>
+
+      <!-- Center Panel - Chart -->
+      <Border Grid.Column="1" Classes="modern-card chart-card center-panel" Name="ChartCard">
+        <Grid RowDefinitions="Auto,*">
+
+          <!-- Chart Header -->
+          <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,24">
+            <!-- Title and Time Filters -->
+            <StackPanel Grid.Column="0" Spacing="16">
+              <TextBlock Classes="title-medium" Text="📈 Gráfico em Tempo Real"/>
+
+              <!-- Time Filter Buttons -->
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <Button Classes="time-filter selected" Content="1H" Name="Button1H"/>
+                <Button Classes="time-filter" Content="6H" Name="Button6H"/>
+                <Button Classes="time-filter" Content="24H" Name="Button24H"/>
+                <Button Classes="time-filter" Content="7D" Name="Button7D"/>
+              </StackPanel>
+            </StackPanel>
+
+            <!-- Controls -->
+            <StackPanel Grid.Column="1" Spacing="8" HorizontalAlignment="Right">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <DatePicker Name="StartDatePicker"
+                           Classes="modern-date"
+                           Width="140"/>
+                <DatePicker Name="EndDatePicker"
+                           Classes="modern-date"
+                           Width="140"/>
+              </StackPanel>
+              <Button Classes="gradient-button error-button"
+                     Name="ClearDatabaseButton"
+                     Content="Limpar Dados"
+                     HorizontalAlignment="Stretch"/>
+            </StackPanel>
+          </Grid>
+
+          <!-- Chart Area -->
+          <Grid Grid.Row="1" RowDefinitions="*,Auto">
+            <!-- Chart Container -->
+            <Border Grid.Row="0"
+                   Classes="chart-container"
+                   Name="ChartContainer"
+                   MinHeight="300">
+              <Grid Name="ChartGrid">
+                <TextBlock Text="Aguardando dados do Arduino..."
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Classes="subtitle"/>
+              </Grid>
+            </Border>
+
+            <!-- Chart Legend -->
+            <StackPanel Grid.Row="1"
+                       Orientation="Horizontal"
+                       HorizontalAlignment="Center"
+                       Margin="0,16,0,0"
+                       Spacing="24">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <Rectangle Width="20" Height="4">
+                  <Rectangle.Fill>
+                    <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                      <GradientStop Offset="0" Color="#FF6B6B"/>
+                      <GradientStop Offset="1" Color="#FF8E53"/>
+                    </LinearGradientBrush>
+                  </Rectangle.Fill>
+                </Rectangle>
+                <TextBlock Text="Temperatura" Classes="subtitle"/>
+              </StackPanel>
+
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <Rectangle Width="20" Height="4">
+                  <Rectangle.Fill>
+                    <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                      <GradientStop Offset="0" Color="#4ECDC4"/>
+                      <GradientStop Offset="1" Color="#44A08D"/>
+                    </LinearGradientBrush>
+                  </Rectangle.Fill>
+                </Rectangle>
+                <TextBlock Text="Umidade" Classes="subtitle"/>
+              </StackPanel>
+            </StackPanel>
+          </Grid>
+        </Grid>
+      </Border>
+
+      <!-- Right Panel - History -->
+      <ScrollViewer Grid.Column="2"
+                   HorizontalScrollBarVisibility="Disabled"
+                   VerticalScrollBarVisibility="Auto"
+                   Classes="modern-scroll right-panel"
+                   Margin="8,0,0,0"
+                   Name="RightPanel">
+        <Border Classes="modern-card history-card" Name="HistoryCard">
+          <StackPanel Spacing="16">
+            <TextBlock Classes="title-small" Text="📋 Histórico Recente"/>
+
+            <!-- Table Header -->
+            <Border Background="{DynamicResource AccentPrimary}"
+                   CornerRadius="8"
+                   Padding="16,12">
+              <Grid ColumnDefinitions="2*,1.5*,1.5*">
+                <TextBlock Grid.Column="0"
+                          Text="Tempo"
+                          FontWeight="Bold"
+                          Foreground="White"/>
+                <TextBlock Grid.Column="1"
+                          Text="Temp"
+                          FontWeight="Bold"
+                          Foreground="White"
+                          HorizontalAlignment="Center"/>
+                <TextBlock Grid.Column="2"
+                          Text="Umid"
+                          FontWeight="Bold"
+                          Foreground="White"
+                          HorizontalAlignment="Center"/>
+              </Grid>
+            </Border>
+
+            <!-- Table Content -->
+            <ScrollViewer MaxHeight="500"
+                         Name="HistoryScrollViewer"
+                         Classes="modern-scroll">
+              <StackPanel Name="HistoryDataPanel" Spacing="2">
+                <TextBlock Text="Aguardando dados..."
+                          HorizontalAlignment="Center"
+                          Margin="0,40"
+                          Classes="subtitle"/>
+              </StackPanel>
+            </ScrollViewer>
+          </StackPanel>
+        </Border>
+      </ScrollViewer>
+
+    </Grid>
+  </Grid>
+</Window>
