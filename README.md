@@ -45,7 +45,7 @@ O **CanSat Monitor Dashboard** é uma aplicação desktop multiplataforma que pe
 ### Clonando o Repositório
 
 ```bash
-git clone https://github.com/[seu-usuario]/cansat-monitor.git
+git clone https://github.com/Albinopedro/cansat-monitor.git
 cd cansat-monitor
 ```
 
@@ -193,7 +193,7 @@ Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICE
 
 Se encontrar algum problema ou tiver sugestões:
 
-1. Abra uma [Issue](https://github.com/[seu-usuario]/cansat-monitor/issues)
+1. Abra uma [Issue](https://github.com/Albinopedro/cansat-monitor/issues)
 2. Descreva o problema ou sugestão detalhadamente
 3. Inclua screenshots se relevante
 
