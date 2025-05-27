@@ -162,6 +162,8 @@ Interface elegante com fundo escuro e acentos coloridos.
 - **Tela Média**: Reorganização automática dos elementos
 - **Tela Pequena**: Layout compacto otimizado
 
+> O layout responsivo ainda pode ser aprimorado, mas já oferece uma experiência razoável para as principais proporções de tela.
+
 ## 🛠️ Desenvolvimento
 
 ### Estrutura do Projeto
@@ -210,6 +212,4 @@ Se encontrar algum problema ou tiver sugestões:
 
 ---
 
-**Desenvolvido com ❤️ para a comunidade CanSat**
-
-*Este projeto faz parte do programa CanSat e visa facilitar o monitoramento de dados de sensores em tempo real para projetos educacionais e de pesquisa.*
+*Este projeto visa facilitar o monitoramento de dados de sensores em tempo real para projetos educacionais e de pesquisa.*
