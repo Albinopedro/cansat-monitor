@@ -5,6 +5,9 @@ Um dashboard moderno e responsivo para monitoramento de dados de sensores CanSat
 ![CanSat Monitor](https://img.shields.io/badge/Platform-.NET%209-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Framework](https://img.shields.io/badge/UI-Avalonia-purple)
+![Build Status](https://github.com/Albinopedro/cansat-monitor/workflows/Build%20and%20Test/badge.svg)
+![GitHub release](https://img.shields.io/github/v/release/Albinopedro/cansat-monitor)
+![GitHub issues](https://img.shields.io/github/issues/Albinopedro/cansat-monitor)
 
 ## 📋 Sobre o Projeto
 
