@@ -1,0 +1,57 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            runtime: win-x64
+            artifact: win-x64
+          - os: ubuntu-latest
+            runtime: linux-x64
+            artifact: linux-x64
+          - os: macos-latest
+            runtime: osx-x64
+            artifact: osx-x64
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build and Publish
+      run: |
+        dotnet publish -c Release -r ${{ matrix.runtime }} --self-contained -o ./publish/${{ matrix.artifact }}
+        
+    - name: Create Archive
+      run: |
+        cd ./publish/${{ matrix.artifact }}
+        if [[ "${{ matrix.runtime }}" == "win-x64" ]]; then
+          zip -r ../../cansat-monitor-${{ matrix.artifact }}.zip .
+        else
+          tar -czf ../../cansat-monitor-${{ matrix.artifact }}.tar.gz .
+        fi
+        
+    - name: Upload Release Assets
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          cansat-monitor-${{ matrix.artifact }}.*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

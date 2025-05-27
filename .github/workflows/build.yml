@@ -1,0 +1,49 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+      
+    - name: Test
+      run: dotnet test --no-build --configuration Release --verbosity normal
+      
+    - name: Publish Linux
+      if: matrix.os == 'ubuntu-latest'
+      run: dotnet publish -c Release -r linux-x64 --self-contained -o ./publish/linux-x64
+      
+    - name: Publish Windows
+      if: matrix.os == 'windows-latest'
+      run: dotnet publish -c Release -r win-x64 --self-contained -o ./publish/win-x64
+      
+    - name: Publish macOS
+      if: matrix.os == 'macos-latest'
+      run: dotnet publish -c Release -r osx-x64 --self-contained -o ./publish/osx-x64
+      
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: cansat-monitor-${{ matrix.os }}
+        path: ./publish/
