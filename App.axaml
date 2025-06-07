@@ -355,5 +355,21 @@
       <Setter Property="AllowAutoHide" Value="True"/>
     </Style>
 
+    <!-- Modern CheckBox -->
+    <Style Selector="CheckBox.modern-checkbox">
+      <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+      <Setter Property="FontSize" Value="14"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="Margin" Value="4"/>
+    </Style>
+
+    <Style Selector="CheckBox.modern-checkbox.dark">
+      <Setter Property="Foreground" Value="{DynamicResource DarkTextPrimary}"/>
+    </Style>
+
+    <Style Selector="CheckBox.modern-checkbox:checked">
+      <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+
   </Application.Styles>
 </Application>

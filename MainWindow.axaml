@@ -396,6 +396,18 @@
                 <Button Classes="time-filter" Content="7D" Name="Button7D"/>
                 <Button Classes="time-filter" Content="30D" Name="Button30D"/>
               </StackPanel>
+
+              <!-- Series Visibility Controls -->
+              <StackPanel Orientation="Horizontal" Spacing="12">
+                <CheckBox Name="TemperatureVisibilityCheckBox"
+                         IsChecked="True"
+                         Content="📈 Temperatura"
+                         Classes="modern-checkbox"/>
+                <CheckBox Name="HumidityVisibilityCheckBox"
+                         IsChecked="True"
+                         Content="💧 Umidade"
+                         Classes="modern-checkbox"/>
+              </StackPanel>
             </StackPanel>
 
             <!-- Controls -->

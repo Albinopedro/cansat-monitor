@@ -62,6 +62,10 @@ namespace CanSatMonitor
         private Button? _button7D;
         private Button? _button30D;
 
+        // Series visibility controls
+        private CheckBox? _temperatureVisibilityCheckBox;
+        private CheckBox? _humidityVisibilityCheckBox;
+
         // LiveCharts components
         private CartesianChart? _cartesianChart;
         private ObservableCollection<DateTimePoint> _temperatureData;
@@ -334,6 +338,10 @@ namespace CanSatMonitor
             _button7D = this.FindControl<Button>("Button7D");
             _button30D = this.FindControl<Button>("Button30D");
 
+            // Initialize checkbox controls
+            _temperatureVisibilityCheckBox = this.FindControl<CheckBox>("TemperatureVisibilityCheckBox");
+            _humidityVisibilityCheckBox = this.FindControl<CheckBox>("HumidityVisibilityCheckBox");
+
             // Initial UI state
             if (_disconnectButton != null) _disconnectButton.IsEnabled = false;
         }
@@ -444,12 +452,9 @@ namespace CanSatMonitor
             _cartesianChart.LegendTextPaint = new SolidColorPaint(SKColors.Black);
             _cartesianChart.LegendTextSize = 14;
 
-            _cartesianChart.TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Top;
-            _cartesianChart.TooltipTextPaint = new SolidColorPaint(SKColors.Black);
-            _cartesianChart.TooltipBackgroundPaint = new SolidColorPaint(SKColors.White);
-            
-            // Configure tooltip
-            _cartesianChart.TooltipFindingStrategy = LiveChartsCore.Measure.TooltipFindingStrategy.CompareOnlyX;
+            // Disable tooltips completely to prevent UI issues
+            _cartesianChart.TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Hidden;
+            _cartesianChart.Tooltip = null;
 
             // Habilitar zoom (apenas no eixo X)
             _cartesianChart.ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.X;
@@ -459,6 +464,9 @@ namespace CanSatMonitor
             
             // Initialize X-axis formatting for default filter
             UpdateXAxisFormatting();
+            
+            // Initialize series visibility
+            UpdateSeriesVisibility();
         }
 
         private void SetupEventHandlers()
@@ -468,6 +476,12 @@ namespace CanSatMonitor
             if (_button24H != null) _button24H.Click += (s, e) => OnTimeFilterChanged("24H");
             if (_button7D != null) _button7D.Click += (s, e) => OnTimeFilterChanged("7D");
             if (_button30D != null) _button30D.Click += (s, e) => OnTimeFilterChanged("30D");
+
+            // Checkbox event handlers
+            if (_temperatureVisibilityCheckBox != null) 
+                _temperatureVisibilityCheckBox.Click += OnTemperatureVisibilityChanged;
+            if (_humidityVisibilityCheckBox != null) 
+                _humidityVisibilityCheckBox.Click += OnHumidityVisibilityChanged;
 
             if (_connectButton != null) _connectButton.Click += OnConnectClicked;
             if (_disconnectButton != null) _disconnectButton.Click += OnDisconnectClicked;
@@ -942,6 +956,57 @@ namespace CanSatMonitor
             return border;
         }
 
+        private void OnTemperatureVisibilityChanged(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            UpdateSeriesVisibility();
+        }
+
+        private void OnHumidityVisibilityChanged(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            UpdateSeriesVisibility();
+        }
+
+        private void UpdateSeriesVisibility()
+        {
+            if (_cartesianChart?.Series == null) return;
+
+            var tempVisible = _temperatureVisibilityCheckBox?.IsChecked == true;
+            var humidityVisible = _humidityVisibilityCheckBox?.IsChecked == true;
+
+            // Ensure at least one series is visible
+            if (!tempVisible && !humidityVisible)
+            {
+                // Re-enable the last clicked checkbox
+                if (_humidityVisibilityCheckBox?.IsChecked == false)
+                {
+                    _humidityVisibilityCheckBox.IsChecked = true;
+                    humidityVisible = true;
+                }
+                else if (_temperatureVisibilityCheckBox?.IsChecked == false)
+                {
+                    _temperatureVisibilityCheckBox.IsChecked = true;
+                    tempVisible = true;
+                }
+            }
+
+            var seriesList = _cartesianChart.Series.ToList();
+            
+            if (seriesList.Count >= 2)
+            {
+                // Temperature series (index 0)
+                if (seriesList[0] is LineSeries<DateTimePoint> tempSeries)
+                {
+                    tempSeries.IsVisible = tempVisible;
+                }
+                
+                // Humidity series (index 1)
+                if (seriesList[1] is LineSeries<DateTimePoint> humSeries)
+                {
+                    humSeries.IsVisible = humidityVisible;
+                }
+            }
+        }
+
         private void UpdateChart()
         {
             if (_temperatureData == null || _humidityData == null)
@@ -1340,6 +1405,20 @@ namespace CanSatMonitor
         private void ApplyThemeToTimeButtons(bool isDark)
         {
             var buttons = new[] { _button1H, _button6H, _button24H, _button7D, _button30D };
+            
+            // Apply theme to checkboxes
+            var checkboxes = new[] { _temperatureVisibilityCheckBox, _humidityVisibilityCheckBox };
+            foreach (var checkbox in checkboxes)
+            {
+                if (checkbox != null)
+                {
+                    if (!checkbox.Classes.Contains("modern-checkbox"))
+                        checkbox.Classes.Add("modern-checkbox");
+                        
+                    if (isDark) checkbox.Classes.Add("dark");
+                    else checkbox.Classes.Remove("dark");
+                }
+            }
             foreach (var btn in buttons)
             {
                 if (btn != null)
