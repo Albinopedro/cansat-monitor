@@ -356,9 +356,9 @@ namespace CanSatMonitor
                 {
                     Values = _temperatureData,
                     Name = "Temperatura (°C)",
-                    Stroke = new SolidColorPaint(new SKColor(255, 107, 107)) { StrokeThickness = 2 },
+                    Stroke = new SolidColorPaint(new SKColor(255, 107, 107)) { StrokeThickness = 3 },
                     Fill = new SolidColorPaint(new SKColor(255, 107, 107, 50)) { },
-                    GeometryStroke = new SolidColorPaint(new SKColor(255, 107, 107)) { StrokeThickness = 1 },
+                    GeometryStroke = new SolidColorPaint(new SKColor(255, 107, 107)) { StrokeThickness = 2 },
                     GeometryFill = new SolidColorPaint(SKColors.White),
                     GeometrySize = 0,
                     LineSmoothness = 0.5,
@@ -368,9 +368,9 @@ namespace CanSatMonitor
                 {
                     Values = _humidityData,
                     Name = "Umidade (%)",
-                    Stroke = new SolidColorPaint(new SKColor(78, 205, 196)) { StrokeThickness = 2 },
+                    Stroke = new SolidColorPaint(new SKColor(78, 205, 196)) { StrokeThickness = 3 },
                     Fill = new SolidColorPaint(new SKColor(78, 205, 196, 30)) { },
-                    GeometryStroke = new SolidColorPaint(new SKColor(78, 205, 196)) { StrokeThickness = 1 },
+                    GeometryStroke = new SolidColorPaint(new SKColor(78, 205, 196)) { StrokeThickness = 2 },
                     GeometryFill = new SolidColorPaint(SKColors.White),
                     GeometrySize = 0,
                     LineSmoothness = 0.5,
@@ -389,12 +389,21 @@ namespace CanSatMonitor
                     TextSize = 12,
                     SeparatorsPaint = new SolidColorPaint(SKColors.LightGray) { StrokeThickness = 1 },
                     Labeler = value => {
-                        try
+                        try 
                         {
                             var ticks = (long)value;
                             if (ticks < DateTime.MinValue.Ticks || ticks > DateTime.MaxValue.Ticks)
                                 return "N/A";
-                            return new DateTime(ticks).ToString("HH:mm:ss");
+                            
+                            var dateTime = new DateTime(ticks);
+                            
+                            // Format based on current time filter
+                            return _selectedTimeFilter switch
+                            {
+                                "30D" => dateTime.ToString("dd/MM"),
+                                "7D" => dateTime.ToString("dd/MM\nHH:mm"),
+                                _ => dateTime.ToString("HH:mm")
+                            };
                         }
                         catch
                         {
@@ -438,12 +447,18 @@ namespace CanSatMonitor
             _cartesianChart.TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Top;
             _cartesianChart.TooltipTextPaint = new SolidColorPaint(SKColors.Black);
             _cartesianChart.TooltipBackgroundPaint = new SolidColorPaint(SKColors.White);
+            
+            // Configure tooltip
+            _cartesianChart.TooltipFindingStrategy = LiveChartsCore.Measure.TooltipFindingStrategy.CompareOnlyX;
 
             // Habilitar zoom (apenas no eixo X)
             _cartesianChart.ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.X;
 
             _chartGrid.Children.Clear();
             _chartGrid.Children.Add(_cartesianChart);
+            
+            // Initialize X-axis formatting for default filter
+            UpdateXAxisFormatting();
         }
 
         private void SetupEventHandlers()
@@ -748,6 +763,7 @@ namespace CanSatMonitor
             _selectedTimeFilter = filter;
             UpdateTimeFilterButtons();
             UpdateChart();
+            UpdateXAxisFormatting();
             RecalculateAllStatistics();
         }
 
@@ -978,6 +994,9 @@ namespace CanSatMonitor
                     var xAxis = xAxesList[0];
                     xAxis.MinLimit = filteredData.Min(d => d.Timestamp).Ticks;
                     xAxis.MaxLimit = filteredData.Max(d => d.Timestamp).Ticks;
+                    
+                    // Update axis step and unit based on time filter
+                    UpdateXAxisFormatting();
                 }
             }
         }
@@ -985,6 +1004,69 @@ namespace CanSatMonitor
         private void UpdateChartWithCustomDate()
         {
             UpdateChart();
+        }
+
+
+
+        private void UpdateXAxisFormatting()
+        {
+            if (_cartesianChart?.XAxes == null) return;
+            
+            var xAxesList = _cartesianChart.XAxes.ToList();
+            if (xAxesList.Count == 0) return;
+            
+            var xAxis = xAxesList[0];
+            
+            switch (_selectedTimeFilter)
+            {
+                case "1H":
+                    xAxis.UnitWidth = TimeSpan.FromMinutes(5).Ticks;
+                    xAxis.MinStep = TimeSpan.FromMinutes(1).Ticks;
+                    break;
+                case "6H":
+                    xAxis.UnitWidth = TimeSpan.FromMinutes(30).Ticks;
+                    xAxis.MinStep = TimeSpan.FromMinutes(10).Ticks;
+                    break;
+                case "24H":
+                    xAxis.UnitWidth = TimeSpan.FromHours(2).Ticks;
+                    xAxis.MinStep = TimeSpan.FromHours(1).Ticks;
+                    break;
+                case "7D":
+                    xAxis.UnitWidth = TimeSpan.FromHours(12).Ticks;
+                    xAxis.MinStep = TimeSpan.FromHours(6).Ticks;
+                    break;
+                case "30D":
+                    xAxis.UnitWidth = TimeSpan.FromDays(2).Ticks;
+                    xAxis.MinStep = TimeSpan.FromDays(1).Ticks;
+                    break;
+                default:
+                    xAxis.UnitWidth = TimeSpan.FromMinutes(5).Ticks;
+                    xAxis.MinStep = TimeSpan.FromMinutes(1).Ticks;
+                    break;
+            }
+            
+            // Update labeler for current filter
+            xAxis.Labeler = value => {
+                try 
+                {
+                    var ticks = (long)value;
+                    if (ticks < DateTime.MinValue.Ticks || ticks > DateTime.MaxValue.Ticks)
+                        return "N/A";
+                    
+                    var dateTime = new DateTime(ticks);
+                    
+                    return _selectedTimeFilter switch
+                    {
+                        "30D" => dateTime.ToString("dd/MM"),
+                        "7D" => dateTime.ToString("dd/MM\nHH:mm"),
+                        _ => dateTime.ToString("HH:mm")
+                    };
+                }
+                catch
+                {
+                    return "N/A";
+                }
+            };
         }
 
         private void InitializeComponent()
