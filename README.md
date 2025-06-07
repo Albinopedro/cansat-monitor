@@ -89,6 +89,7 @@ Humidade: 65.2, Temperatura: 23.8
 ```
 
 ### Configuração Serial
+
 - **Baud Rate**: 9600
 - **Data Bits**: 8
 - **Parity**: None
@@ -96,37 +97,43 @@ Humidade: 65.2, Temperatura: 23.8
 
 ## 🎮 Como Usar
 
-1. **Conectar Dispositivo**: 
-   - Conecte seu dispositivo CanSat via USB/Serial
-   - Selecione a porta correspondente no dropdown
-   - Clique em "Conectar"
+1. **Conectar Dispositivo**:
+
+    - Conecte seu dispositivo CanSat via USB/Serial
+    - Selecione a porta correspondente no dropdown
+    - Clique em "Conectar"
 
 2. **Monitoramento**:
-   - Os dados aparecerão automaticamente nos cartões de sensores
-   - O gráfico será atualizado em tempo real
-   - O histórico será salvo automaticamente
+
+    - Os dados aparecerão automaticamente nos cartões de sensores
+    - O gráfico será atualizado em tempo real
+    - O histórico será salvo automaticamente
 
 3. **Filtros Temporais**:
-   - Use os botões 1H, 6H, 24H, 7D para diferentes períodos
-   - Use o filtro personalizado para datas específicas
+
+    - Use os botões 1H, 6H, 24H, 7D para diferentes períodos
+    - Use o filtro personalizado para datas específicas
 
 4. **Temas**:
-   - Clique no ícone de tema no canto superior direito
-   - Ou use `Ctrl+D` para alternar rapidamente
+    - Clique no ícone de tema no canto superior direito
+    - Ou use `Ctrl+D` para alternar rapidamente
 
 ## 📊 Funcionalidades do Dashboard
 
 ### Cartões de Sensores
+
 - **Temperatura**: Valor atual, máximo/mínimo do período
 - **Umidade**: Valor atual e média do período
 - **Indicadores Visuais**: Barras de progresso e status de conexão
 
 ### Gráficos Interativos
+
 - **Zoom**: Utilize o scroll do mouse no eixo X
 - **Tooltip**: Passe o mouse sobre os pontos para detalhes
 - **Duplo Eixo Y**: Temperatura (°C) e Umidade (%) em escalas independentes
 
 ### Histórico de Dados
+
 - **Tabela Detalhada**: Todos os registros com timestamp
 - **Scroll Automático**: Sempre mostra os dados mais recentes
 - **Persistência**: Dados salvos automaticamente a cada 30 segundos
@@ -134,30 +141,35 @@ Humidade: 65.2, Temperatura: 23.8
 ## 🗄️ Estrutura de Dados
 
 Os dados são salvos em formato JSON no diretório:
+
 - **Windows**: `%LocalAppData%\CanSatMonitor\sensor_data.json`
 - **Linux**: `~/.local/share/CanSatMonitor/sensor_data.json`
 - **macOS**: `~/Library/Application Support/CanSatMonitor/sensor_data.json`
 
 Exemplo de estrutura:
+
 ```json
 [
-  {
-    "Timestamp": "2025-05-27T14:30:00",
-    "Temperature": 23.5,
-    "Humidity": 65.2
-  }
+    {
+        "Timestamp": "2025-05-27T14:30:00",
+        "Temperature": 23.5,
+        "Humidity": 65.2
+    }
 ]
 ```
 
 ## 🎨 Interface
 
 ### Tema Claro
+
 Interface clean e moderna com tons claros e azuis.
 
 ### Tema Escuro
+
 Interface elegante com fundo escuro e acentos coloridos.
 
 ### Layout Responsivo
+
 - **Tela Grande**: Layout completo com todos os componentes
 - **Tela Média**: Reorganização automática dos elementos
 - **Tela Pequena**: Layout compacto otimizado
@@ -192,7 +204,7 @@ Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICE
 
 ## 🤝 Contribuidores
 
-- **Albino Pedro** - *Desenvolvimento Principal* - [@albinopedro](https://github.com/albinopedro)
+- **Albino Pedro** - _Desenvolvimento Principal_ - [@albinopedro](https://github.com/albinopedro)
 
 ## 📞 Suporte
 
@@ -212,4 +224,4 @@ Se encontrar algum problema ou tiver sugestões:
 
 ---
 
-*Este projeto visa facilitar o monitoramento de dados de sensores em tempo real para projetos educacionais e de pesquisa.*
+_Este projeto visa facilitar o monitoramento de dados de sensores em tempo real para projetos educacionais e de pesquisa._

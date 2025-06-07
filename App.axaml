@@ -346,7 +346,7 @@
 
     <!-- Modern Layout -->
     <Style Selector="Grid.modern-layout">
-      <Setter Property="Margin" Value="16"/>
+      <Setter Property="Margin" Value="0"/>
     </Style>
 
     <!-- Modern ScrollViewer -->

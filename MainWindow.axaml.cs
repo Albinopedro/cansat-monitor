@@ -60,6 +60,7 @@ namespace CanSatMonitor
         private Button? _button6H;
         private Button? _button24H;
         private Button? _button7D;
+        private Button? _button30D;
 
         // LiveCharts components
         private CartesianChart? _cartesianChart;
@@ -258,6 +259,7 @@ namespace CanSatMonitor
                 "6H" => TimeSpan.FromHours(6),
                 "24H" => TimeSpan.FromHours(24),
                 "7D" => TimeSpan.FromDays(7),
+                "30D" => TimeSpan.FromDays(30),
                 _ => TimeSpan.FromHours(1)
             };
 
@@ -330,6 +332,7 @@ namespace CanSatMonitor
             _button6H = this.FindControl<Button>("Button6H");
             _button24H = this.FindControl<Button>("Button24H");
             _button7D = this.FindControl<Button>("Button7D");
+            _button30D = this.FindControl<Button>("Button30D");
 
             // Initial UI state
             if (_disconnectButton != null) _disconnectButton.IsEnabled = false;
@@ -353,9 +356,9 @@ namespace CanSatMonitor
                 {
                     Values = _temperatureData,
                     Name = "Temperatura (°C)",
-                    Stroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 3 },
-                    Fill = new SolidColorPaint(SKColors.Red.WithAlpha(50)),
-                    GeometryStroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 2 },
+                    Stroke = new SolidColorPaint(new SKColor(255, 107, 107)) { StrokeThickness = 2 },
+                    Fill = new SolidColorPaint(new SKColor(255, 107, 107, 50)) { },
+                    GeometryStroke = new SolidColorPaint(new SKColor(255, 107, 107)) { StrokeThickness = 1 },
                     GeometryFill = new SolidColorPaint(SKColors.White),
                     GeometrySize = 0,
                     LineSmoothness = 0.5,
@@ -365,9 +368,9 @@ namespace CanSatMonitor
                 {
                     Values = _humidityData,
                     Name = "Umidade (%)",
-                    Stroke = new SolidColorPaint(SKColors.Blue) { StrokeThickness = 3 },
-                    Fill = new SolidColorPaint(SKColors.Blue.WithAlpha(30)),
-                    GeometryStroke = new SolidColorPaint(SKColors.Blue) { StrokeThickness = 2 },
+                    Stroke = new SolidColorPaint(new SKColor(78, 205, 196)) { StrokeThickness = 2 },
+                    Fill = new SolidColorPaint(new SKColor(78, 205, 196, 30)) { },
+                    GeometryStroke = new SolidColorPaint(new SKColor(78, 205, 196)) { StrokeThickness = 1 },
                     GeometryFill = new SolidColorPaint(SKColors.White),
                     GeometrySize = 0,
                     LineSmoothness = 0.5,
@@ -386,7 +389,7 @@ namespace CanSatMonitor
                     TextSize = 12,
                     SeparatorsPaint = new SolidColorPaint(SKColors.LightGray) { StrokeThickness = 1 },
                     Labeler = value => {
-                        try 
+                        try
                         {
                             var ticks = (long)value;
                             if (ticks < DateTime.MinValue.Ticks || ticks > DateTime.MaxValue.Ticks)
@@ -408,20 +411,20 @@ namespace CanSatMonitor
                 new Axis
                 {
                     Name = "Temperatura (°C)",
-                    NamePaint = new SolidColorPaint(SKColors.Red),
-                    LabelsPaint = new SolidColorPaint(SKColors.Red),
+                    NamePaint = new SolidColorPaint(new SKColor(255, 107, 107)),
+                    LabelsPaint = new SolidColorPaint(new SKColor(255, 107, 107)),
                     TextSize = 12,
-                    SeparatorsPaint = new SolidColorPaint(SKColors.Red.WithAlpha(50)) { StrokeThickness = 1 },
+                    SeparatorsPaint = new SolidColorPaint(new SKColor(255, 107, 107, 50)) { StrokeThickness = 1 },
                     Position = LiveChartsCore.Measure.AxisPosition.Start,
                     Labeler = value => $"{value:F1}°C"
                 },
                 new Axis
                 {
                     Name = "Umidade (%)",
-                    NamePaint = new SolidColorPaint(SKColors.Blue),
-                    LabelsPaint = new SolidColorPaint(SKColors.Blue),
+                    NamePaint = new SolidColorPaint(new SKColor(78, 205, 196)),
+                    LabelsPaint = new SolidColorPaint(new SKColor(78, 205, 196)),
                     TextSize = 12,
-                    SeparatorsPaint = new SolidColorPaint(SKColors.Blue.WithAlpha(30)) { StrokeThickness = 1 },
+                    SeparatorsPaint = new SolidColorPaint(new SKColor(78, 205, 196, 30)) { StrokeThickness = 1 },
                     Position = LiveChartsCore.Measure.AxisPosition.End,
                     Labeler = value => $"{value:F0}%",
                     ShowSeparatorLines = false
@@ -449,6 +452,7 @@ namespace CanSatMonitor
             if (_button6H != null) _button6H.Click += (s, e) => OnTimeFilterChanged("6H");
             if (_button24H != null) _button24H.Click += (s, e) => OnTimeFilterChanged("24H");
             if (_button7D != null) _button7D.Click += (s, e) => OnTimeFilterChanged("7D");
+            if (_button30D != null) _button30D.Click += (s, e) => OnTimeFilterChanged("30D");
 
             if (_connectButton != null) _connectButton.Click += OnConnectClicked;
             if (_disconnectButton != null) _disconnectButton.Click += OnDisconnectClicked;
@@ -645,6 +649,7 @@ namespace CanSatMonitor
                 "6H" => TimeSpan.FromHours(6),
                 "24H" => TimeSpan.FromHours(24),
                 "7D" => TimeSpan.FromDays(7),
+                "30D" => TimeSpan.FromDays(30),
                 _ => TimeSpan.FromHours(1)
             };
 
@@ -752,6 +757,7 @@ namespace CanSatMonitor
             ResetButtonStyle(_button6H);
             ResetButtonStyle(_button24H);
             ResetButtonStyle(_button7D);
+            ResetButtonStyle(_button30D);
 
             Button? selectedButton = _selectedTimeFilter switch
             {
@@ -759,6 +765,7 @@ namespace CanSatMonitor
                 "6H" => _button6H,
                 "24H" => _button24H,
                 "7D" => _button7D,
+                "30D" => _button30D,
                 _ => _button1H
             };
 
@@ -943,6 +950,7 @@ namespace CanSatMonitor
                     "6H" => TimeSpan.FromHours(6),
                     "24H" => TimeSpan.FromHours(24),
                     "7D" => TimeSpan.FromDays(7),
+                    "30D" => TimeSpan.FromDays(30),
                     _ => TimeSpan.FromHours(1)
                 };
 
@@ -1123,19 +1131,19 @@ namespace CanSatMonitor
         private void ApplyThemeToModernCards(bool isDark)
         {
             var cardNames = new[] { "ConnectionCard", "TemperatureCard", "HumidityCard", "StatsCard", "ChartCard", "HistoryCard" };
-            
+
             foreach (var cardName in cardNames)
             {
                 var card = this.FindControl<Border>(cardName);
                 if (card != null)
                 {
-                    if (isDark) 
+                    if (isDark)
                     {
                         card.Classes.Remove("modern-card");
                         card.Classes.Add("modern-card");
                         card.Classes.Add("dark");
                     }
-                    else 
+                    else
                     {
                         card.Classes.Remove("dark");
                         card.Classes.Remove("modern-card");
@@ -1158,13 +1166,13 @@ namespace CanSatMonitor
             // DatePickers
             var startDatePicker = this.FindControl<DatePicker>("StartDatePicker");
             var endDatePicker = this.FindControl<DatePicker>("EndDatePicker");
-            
+
             if (startDatePicker != null)
             {
                 if (isDark) startDatePicker.Classes.Add("dark");
                 else startDatePicker.Classes.Remove("dark");
             }
-            
+
             if (endDatePicker != null)
             {
                 if (isDark) endDatePicker.Classes.Add("dark");
@@ -1249,7 +1257,7 @@ namespace CanSatMonitor
 
         private void ApplyThemeToTimeButtons(bool isDark)
         {
-            var buttons = new[] { _button1H, _button6H, _button24H, _button7D };
+            var buttons = new[] { _button1H, _button6H, _button24H, _button7D, _button30D };
             foreach (var btn in buttons)
             {
                 if (btn != null)
@@ -1257,7 +1265,7 @@ namespace CanSatMonitor
                     // Ensure the button has the time-filter class
                     if (!btn.Classes.Contains("time-filter"))
                         btn.Classes.Add("time-filter");
-                        
+
                     if (isDark) btn.Classes.Add("dark");
                     else btn.Classes.Remove("dark");
                 }
@@ -1381,20 +1389,22 @@ namespace CanSatMonitor
             {
                 if (isDark)
                 {
-                    _cartesianChart.Background = new SolidColorBrush(Color.FromRgb(44, 62, 80));
+                    // Dark theme background
+                    _cartesianChart.Background = new SolidColorBrush(Color.FromRgb(26, 32, 44));
 
-                    // Atualizar cores dos textos do gráfico
+                    // Update chart text colors
                     if (_cartesianChart.LegendTextPaint != null)
-                        _cartesianChart.LegendTextPaint = new SolidColorPaint(SKColors.White);
+                        _cartesianChart.LegendTextPaint = new SolidColorPaint(new SKColor(247, 250, 252));
 
                     if (_cartesianChart.TooltipTextPaint != null)
-                        _cartesianChart.TooltipTextPaint = new SolidColorPaint(SKColors.White);
+                        _cartesianChart.TooltipTextPaint = new SolidColorPaint(new SKColor(247, 250, 252));
 
                     if (_cartesianChart.TooltipBackgroundPaint != null)
-                        _cartesianChart.TooltipBackgroundPaint = new SolidColorPaint(SKColors.DarkSlateGray);
+                        _cartesianChart.TooltipBackgroundPaint = new SolidColorPaint(new SKColor(45, 55, 72));
                 }
                 else
                 {
+                    // Light theme
                     _cartesianChart.Background = new SolidColorBrush(Colors.White);
 
                     if (_cartesianChart.LegendTextPaint != null)
@@ -1637,18 +1647,18 @@ namespace CanSatMonitor
             var centerPanel = this.FindControl<Border>("ChartCard");
             var rightPanel = this.FindControl<ScrollViewer>("RightPanel");
 
-            if (leftPanel != null) 
+            if (leftPanel != null)
             {
                 Grid.SetRow(leftPanel, 0);
                 Grid.SetColumn(leftPanel, 0);
                 leftPanel.MaxHeight = 300;
             }
-            if (centerPanel != null) 
+            if (centerPanel != null)
             {
                 Grid.SetRow(centerPanel, 1);
                 Grid.SetColumn(centerPanel, 0);
             }
-            if (rightPanel != null) 
+            if (rightPanel != null)
             {
                 Grid.SetRow(rightPanel, 2);
                 Grid.SetColumn(rightPanel, 0);
@@ -1779,7 +1789,7 @@ namespace CanSatMonitor
 
         private void SetMinimumWindowSize()
         {
-            this.MinWidth = 800;
+            this.MinWidth = 1400;
             this.MinHeight = 600;
         }
     }

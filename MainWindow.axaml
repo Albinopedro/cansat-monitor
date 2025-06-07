@@ -8,7 +8,7 @@
     d:DesignHeight="900"
     x:Class="CanSatMonitor.MainWindow"
     Name="MainWindowRoot"
-    MinWidth="800"
+    MinWidth="1400"
     MinHeight="600"
     Title="CanSat Monitor Dashboard"
 >
@@ -394,6 +394,7 @@
                 <Button Classes="time-filter" Content="6H" Name="Button6H"/>
                 <Button Classes="time-filter" Content="24H" Name="Button24H"/>
                 <Button Classes="time-filter" Content="7D" Name="Button7D"/>
+                <Button Classes="time-filter" Content="30D" Name="Button30D"/>
               </StackPanel>
             </StackPanel>
 
@@ -497,7 +498,7 @@
             </Border>
 
             <!-- Table Content -->
-            <ScrollViewer MaxHeight="500"
+            <ScrollViewer MaxHeight="640"
                          Name="HistoryScrollViewer"
                          Classes="modern-scroll">
               <StackPanel Name="HistoryDataPanel" Spacing="2">
